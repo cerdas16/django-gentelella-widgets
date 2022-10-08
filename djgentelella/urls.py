@@ -1,7 +1,7 @@
 from django.conf import settings
 
+from djgentelella.chunked_upload.views import ChunkedUploadView, ChunkedUploadCompleteView
 from .groute import routes
-from chunked_upload.views import ChunkedUploadView, ChunkedUploadCompleteView
 from django.conf.urls import url
 from django.urls import path, include
 from django.contrib.auth import views as auth_views

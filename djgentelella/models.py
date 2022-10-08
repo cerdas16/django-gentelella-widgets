@@ -1,9 +1,9 @@
 from django.contrib.auth.models import Permission, User
 from django.db import models
-from mptt.models import MPTTModel, TreeForeignKey
-# Create your models here.
-from django.utils.translation import ugettext_lazy as _
-
+from tree_queries.models import TreeNode
+from django.utils.translation import gettext_lazy as _
+from djgentelella.chunked_upload.models import AbstractChunkedUpload
+from django.conf import settings
 
 class GentelellaSettings(models.Model):
     """
@@ -18,9 +18,9 @@ class GentelellaSettings(models.Model):
 
 
 
-class MenuItem(MPTTModel):
+class MenuItem(TreeNode):
     #name = models.SlugField(max_length=50, unique=True)
-    parent = TreeForeignKey('self', on_delete=models.CASCADE, null=True, blank=True, related_name='children')
+    #parent = models.ForeignKey('self', on_delete=models.CASCADE, null=True, blank=True, related_name='children')
     title = models.CharField(max_length=500)
     permission = models.ManyToManyField(Permission, blank=True)
     url_name = models.CharField(max_length=500)
@@ -35,12 +35,13 @@ class MenuItem(MPTTModel):
     is_widget = models.BooleanField(default=False)
     icon = models.CharField(max_length=50, null=True, blank=True)
     only_icon = models.BooleanField(default=False)
-
+    position = models.IntegerField(default=0)
 
     def __str__(self):
         return self.title
 
     class MPTTMeta:
+        ordering = ["position"]
         order_insertion_by = ['-id']
 
 class Help(models.Model):
@@ -95,3 +96,20 @@ class PermissionsCategoryManagement(models.Model):
 
     def __str__(self):
         return "%s ½s.%s"%(self.category, self.url_name)
+
+# determine the "null" and "blank" properties of "user" field in the "ChunkedUpload" model
+DEFAULT_MODEL_USER_FIELD_NULL = getattr(settings, 'CHUNKED_UPLOAD_MODEL_USER_FIELD_NULL', True)
+DEFAULT_MODEL_USER_FIELD_BLANK = getattr(settings, 'CHUNKED_UPLOAD_MODEL_USER_FIELD_BLANK', True)
+
+
+class ChunkedUpload(AbstractChunkedUpload):
+    """
+    Default chunked upload model.
+    """
+    user = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        on_delete=models.CASCADE,
+        related_name='chunked_uploads',
+        null=DEFAULT_MODEL_USER_FIELD_NULL,
+        blank=DEFAULT_MODEL_USER_FIELD_BLANK
+    )

@@ -1,9 +1,8 @@
 from django.utils.encoding import smart_str
 from django.utils.html import conditional_escape
-from mptt.forms import TreeNodeChoiceField, TreeNodeMultipleChoiceField
+from django import forms
 
-
-class GentelellaTreeNodeChoiceField(TreeNodeChoiceField):
+class GentelellaTreeNodeChoiceField(forms.Select):
 
     def __init__(self, queryset, *args, **kwargs):
         self.disables = []
@@ -35,7 +34,7 @@ class GentelellaTreeNodeChoiceField(TreeNodeChoiceField):
         return {'level':level, 'disable': disable,  'text': str(obj) }
 
 
-class GentelellaTreeNodeMultipleChoiceField(TreeNodeMultipleChoiceField):
+class GentelellaTreeNodeMultipleChoiceField(forms.SelectMultiple):
     def __init__(self, queryset, *args, **kwargs):
         self.disables = []
         for x in range(4):
