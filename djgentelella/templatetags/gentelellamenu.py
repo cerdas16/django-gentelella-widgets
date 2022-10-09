@@ -32,19 +32,17 @@ def render_item(item, env={}, widget_list=[], level=0, ariabylabel=''):
     a_class=""
     icon=""
     if level > 0:
-
         dropdown = "dropdown-submenu pull-left"
         if not children:
             dropdown = ""
-    dev = '<li id="i_%d" role="presentation" class="%s imenu%d"  >'%(item.pk, dropdown, item.pk)
+    dev = '<li id="i_%d" role="presentation" class="%s imenu%d" >'%(item.pk, dropdown, item.pk)
 
     if item.icon:
         icon = format_html('<i class="{}"></i>', item.icon)
     if children and level == 0:
-        a_class = 'class="dropdown-toggle" data-bs-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"'
+        a_class = 'class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"'
     else:
         a_class = 'tabindex = "-1"'
-
     if item.is_widget:
         wdcontext = {'id': 'tm_'+str(item.id), 'item': item}
         wdcontext.update(env)
@@ -66,7 +64,6 @@ def render_item(item, env={}, widget_list=[], level=0, ariabylabel=''):
     if children:
         dev += '</ul>'
     dev += '</li>'
-
     return dev
 
 register = template.Library()
