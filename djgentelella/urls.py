@@ -2,7 +2,10 @@ from django.conf import settings
 
 from djgentelella.chunked_upload.views import ChunkedUploadView, ChunkedUploadCompleteView
 from .groute import routes
-from django.conf.urls import url
+try:
+    from django.conf.urls import url
+except:
+    from django.urls import re_path as url
 from django.urls import path, include
 from django.contrib.auth import views as auth_views
 from djgentelella.notification.base import NotificacionAPIView, NotificationList

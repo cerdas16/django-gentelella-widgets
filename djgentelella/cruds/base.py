@@ -6,7 +6,10 @@ Free as freedom will be 26/8/2016
 @author: luisza
 '''
 
-from django.conf.urls import url, include
+try:
+    from django.conf.urls import url, include
+except:
+    from django.urls import re_path as url
 from django.contrib.auth.decorators import login_required
 from django.http.response import HttpResponseRedirect, HttpResponseForbidden
 from django.urls.base import reverse_lazy, reverse
